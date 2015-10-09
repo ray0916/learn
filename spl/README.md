@@ -11,5 +11,6 @@ SplQueue: 队列，继承于SplDoublyLinkedList
 SplHeap: 堆
 SplMaxHeap: 最大堆，继承于SplHeap
 SplMinHeap: 最小堆，继承于SplHeap
+SplPriorityQueue: 优先队列堆
 SplFixedArray: 阵列
 SplObjectStorage: 映射
