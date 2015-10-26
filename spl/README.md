@@ -14,3 +14,52 @@ SplMinHeap: 最小堆，继承于SplHeap
 SplPriorityQueue: 优先队列堆
 SplFixedArray: 阵列
 SplObjectStorage: 映射
+
+三 迭代器
+
+迭代器树
+ArrayIterator
+--RecursiveArrayIterator
+
+EmptyIterator
+
+IteratorIterator
+--AppendIterator
+--CachingIterator
+----RecursiveCachingIterator
+--FilterIterator
+----CallbackFilterIterator
+------RecursiveCallbackFilterIterator
+----RecursiveFilterIterator
+------ParentIterator
+----RegexIterator
+------RecursiveRegexIterator
+--InfiniteIterator
+--LimitIterator
+--NoRewindIterator
+
+MultipleIterator
+
+RecursiveIteratorIterator
+--RecursiveTreeIterator
+
+DirectoryIterator
+--FilesystemIterator
+----GlobIterator
+----RecursiveDirectoryIterator
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

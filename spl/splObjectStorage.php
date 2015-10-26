@@ -50,11 +50,58 @@ $obj->valid();
 // 返回对象容器当前节点的索引
 $obj->key();
 
+// rewind()
+// 返回并指向第一个节点元素
+$obj->rewind();
+
+
 // setInfo(mixed $data)
-//
+// 给当前节点赋值。必须是调用rewind后，才可以用setInfo赋值，否则找不到对象。
+$obj->setInfo('AAA');
+
+// getInfo()
+// 获得当前节点的值。也必须是调用rewind后，才可以调用getInfo。
+$obj->getInfo();
+
+// current()
+// 获得当前节点对象
+$obj->current();
+
+// getHash()
+// 获得参数的hash值
+$obj->getHash($a2);
+
+// next()
+// 指针移到下一个节点
+$obj->next();
+
+// offsetExists
+// 判断对象容器中是否存在该对象
+$obj->offsetExists($a2);
+
+// offsetSet()
+// 给对象容器中的某个对象设置值
+$obj->offsetSet($a2, 'BBB');
+
+// offsetGet()
+// 获得对象容器中的某个针对象对应的值
+$obj->offsetGet($a2);
+
+// offsetUnset()
+// 将某节点删除
+//$obj->offsetUnset($a1);
 
 
-var_dump($obj[$o]);
+// serialize()
+// 将对象容器序列化
+$serialize_obj = $obj->serialize();
+
+// unserialize()
+// 将对象容器反序列化
+$obj_2 = new SplObjectStorage();
+$obj_2->unserialize($serialize_obj);
+
+var_dump($obj_2);
 
 
 
