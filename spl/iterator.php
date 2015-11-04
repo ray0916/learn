@@ -143,6 +143,68 @@ foreach ($primes AS $value) {
 
 echo '--------------------------------- FilterIterator END-----------------------------------', '<br />';
 
+echo '---------------------------------  DirectoryIterator START-----------------------------------', '<br />';
+
+/**
+ * DirectoryIterator 查看目录文件或内容
+ */
+$directoryIt = new DirectoryIterator('/data/www');
+
+// 查看该目录下的文件
+echo '<table>';
+foreach ($directoryIt AS $item) {
+    //echo $item, '<br />';
+    if ($item->getFilename() == 'index.php') {
+        // 查看文件的详细信息
+        /*echo '<tr><td>getFilename()</td><td> '; var_dump($item->getFilename()); echo '</td></tr>';
+        echo '<tr><td>getBasename()</td><td> '; var_dump($item->getBasename()); echo '</td></tr>';
+        echo '<tr><td>isDot()</td><td> '; var_dump($item->isDot()); echo '</td></tr>';
+        echo '<tr><td>__toString()</td><td> '; var_dump($item->__toString()); echo '</td></tr>';
+        echo '<tr><td>getPath()</td><td> '; var_dump($item->getPath()); echo '</td></tr>';
+        echo '<tr><td>getPathname()</td><td> '; var_dump($item->getPathname()); echo '</td></tr>';
+        echo '<tr><td>getPerms()</td><td> '; var_dump($item->getPerms()); echo '</td></tr>'; // 获得当前文件的权限
+        echo '<tr><td>getInode()</td><td> '; var_dump($item->getInode()); echo '</td></tr>'; // 获得当前文件的索引节点
+        echo '<tr><td>getSize()</td><td> '; var_dump($item->getSize()); echo '</td></tr>';
+        echo '<tr><td>getOwner()</td><td> '; var_dump($item->getOwner()); echo '</td></tr>';
+        echo '<tr><td>$file->getGroup()</td><td> '; var_dump($item->getGroup()); echo '</td></tr>';
+        echo '<tr><td>getATime()</td><td> '; var_dump($item->getATime()); echo '</td></tr>';
+        echo '<tr><td>getMTime()</td><td> '; var_dump($item->getMTime()); echo '</td></tr>';
+        echo '<tr><td>getCTime()</td><td> '; var_dump($item->getCTime()); echo '</td></tr>';
+        echo '<tr><td>getType()</td><td> '; var_dump($item->getType()); echo '</td></tr>';
+        echo '<tr><td>isWritable()</td><td> '; var_dump($item->isWritable()); echo '</td></tr>';
+        echo '<tr><td>isReadable()</td><td> '; var_dump($item->isReadable()); echo '</td></tr>';
+        echo '<tr><td>isExecutable(</td><td> '; var_dump($item->isExecutable()); echo '</td></tr>';
+        echo '<tr><td>isFile()</td><td> '; var_dump($item->isFile()); echo '</td></tr>';
+        echo '<tr><td>isDir()</td><td> '; var_dump($item->isDir()); echo '</td></tr>';
+        echo '<tr><td>isLink()</td><td> '; var_dump($item->isLink()); echo '</td></tr>';
+        echo '<tr><td>getFileInfo()</td><td> '; var_dump($item->getFileInfo()); echo '</td></tr>';
+        echo '<tr><td>getPathInfo()</td><td> '; var_dump($item->getPathInfo()); echo '</td></tr>';
+        echo '<tr><td>openFile()</td><td> '; var_dump($item->openFile()); echo '</td></tr>';
+        echo '<tr><td>setFileClass()</td><td> '; var_dump($item->setFileClass()); echo '</td></tr>';
+        echo '<tr><td>setInfoClass()</td><td> '; var_dump($item->setInfoClass()); echo '</td></tr>';*/
+    }
+}
+echo '</table>';
+
+// while 循环
+$directoryIt->rewind();
+while ($directoryIt->valid()) {
+    // 过滤 . 和 ..
+    if (!$directoryIt->isDot()) {
+        echo $directoryIt->key(), '=>', $directoryIt->current(), '<br />';
+    }
+    $directoryIt->next();
+}
+
+
+// 获得该目录的所有文件和下级文件夹的文件
+/*$rdIt = new RecursiveIteratorIterator(new RecursiveDirectoryIterator('/data/www/yii2/learn/backend'));
+foreach ($rdIt AS $name => $object) {
+    echo $object.'<br/>';
+}*/
+
+echo '----------------------------------- DirectoryIterator END ---------------------------------', '<br />';
+
 echo '--------------------------------- SimpleXMLIterator START-----------------------------------', '<br />';
 
 /**
@@ -150,13 +212,191 @@ echo '--------------------------------- SimpleXMLIterator START-----------------
  *
  */
 try {
-    $sxi = new SimpleXMLIterator();
+    $xmlString = file_get_contents('spl.xml');
+
+    $simpleIt = new SimpleXMLIterator($xmlString);
+    // 循环所有的节点
+    foreach (new RecursiveIteratorIterator($simpleIt,1) as $name => $data) {
+        //echo $name, '=>', $data, "<br />";
+    }
+
+    // while 循环
+    $simpleIt->rewind();
+    while ($simpleIt->valid()) {
+        /*var_dump($simpleIt->key());
+        echo '=>';
+        var_dump($simpleIt->current());*/
+
+        // getChildren() 获得当前节点的子节点
+        if ($simpleIt->hasChildren()) {
+            //var_dump($simpleIt->getChildren());
+        }
+        $simpleIt->next();
+    }
+
+    // xpath 可以通过path直接获得指定节点的值
+    var_dump($simpleIt->xpath('animal/category/species'));
+
+
+
+} catch (Exception $e) {
+    echo $e->getMessage();
 }
 
-
-
-
-
 echo '--------------------------------- SimpleXMLIterator END-----------------------------------', '<br />';
+
+echo '--------------------------------- CachingIterator START-----------------------------------', '<br />';
+
+/**
+ * CachingIterator 提前读取一个元素
+ * 可以用于确定当前元素是否为最后一个元素
+ */
+$array = array('koala', 'kangaroo', 'wombat', 'wallaby', 'emu', 'kiwi', 'kookaburra', 'platypus');
+
+
+try {
+    $cachingIt = new CachingIterator(new ArrayIterator($array));
+    foreach ($cachingIt AS $item) {
+        echo $item;
+        if ($cachingIt->hasNext()) {
+            echo ',';
+        }
+    }
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
+
+echo '----------------------------------- CachingIterator END ---------------------------------', '<br />';
+
+echo '--------------------------------- LimitIterator END-----------------------------------', '<br />';
+
+/**
+ * LimitIterator 遍历一个Iterator的限定子集
+ * 在__construct有两个可选参数：offset 和 count
+ */
+$array = array('apple', 'banana', 'cherry', 'damson', 'elderberry');
+$fruits = new ArrayIterator($array);
+$offset = 3;$count = 2;
+$limitIt = new LimitIterator($fruits, $offset, $count);
+// 如果增加了offset，那么只有两个数，但是rewind时，节点值不会变成0，而是被截取的值offset。
+// getPosition 获得当前节点的位置
+$limitIt->rewind();
+var_dump($limitIt->getPosition());
+
+foreach ($limitIt AS $item) {
+    echo $item, '<br />';
+}
+
+echo '--------------------------------- LimitIterator START-----------------------------------', '<br />';
+
+echo '----------------------------------- SplFileObject END ---------------------------------', '<br />';
+/**
+ * SplFileObject 对文本文件进行遍历
+ */
+
+$file = '/data/www/test.php';
+$fileIt = new SplFileObject($file);
+// 遍历获得所有的文本，按行遍历
+/*foreach ($fileIt AS $item) {
+    echo $item, '<br />';
+}*/
+
+// 返回第几行
+$fileIt->seek(5);
+echo $fileIt->current();
+echo '<br />';
+
+echo '--------------------------------- SplFileObject END-----------------------------------', '<br />';
+
+echo '--------------------------------- InfiniteIterator START-----------------------------------', '<br />';
+
+/**
+ * infiniteIterator 对一个迭代进行无限循环输出
+ */
+
+$obj = new stdClass();
+$obj->Mon = "Monday";
+$obj->Tue = "Tuesday";
+$obj->Wed = "Wednesday";
+$obj->Thu = "Thursday";
+$obj->Fri = "Friday";
+$obj->Sat = "Saturday";
+$obj->Sun = "Sunday";
+
+$infinate = new InfiniteIterator(new ArrayIterator($obj));
+foreach ( new LimitIterator($infinate, 0, 14) as $value ) {
+    print($value . PHP_EOL);
+}
+
+echo '----------------------------------- InfiniteIterator END ---------------------------------', '<br />';
+
+echo '--------------------------------- RecursiveTreeIterator END-----------------------------------', '<br />';
+/**
+ * RecursiveTreeIterator 已可视的方式显示一个树形结构
+ */
+
+$array = array("a" => "lemon", "b" => "orange", array("a" => "apple", "p" => "pear"));
+$rtreeIt = new RecursiveTreeIterator(new RecursiveArrayIterator($array), null, null, RecursiveIteratorIterator::LEAVES_ONLY );
+foreach ($rtreeIt AS $item){
+    echo $item;
+}
+
+echo '--------------------------------- RecursiveTreeIterator START-----------------------------------', '<br />';
+
+echo '----------------------------------- MultipleIterator  END ---------------------------------', '<br />';
+
+/**
+ * MultipleIterator  用于迭代器的连接器
+ * 预定义常量：
+ * MultipleIterator::MIT_NEED_ANY  不需要所有的子迭代作为有用的节点. 不能设置键值。默认数字键值
+ * MultipleIterator::MIT_NEED_ALL  所有的子节点都是有用的迭代. 不能设置键值。默认数字键值
+ * MultipleIterator::MIT_KEYS_NUMERIC 将子节点的位置作为键值key. 不能设置键值。默认数字键值
+ * MultipleIterator::MIT_KEYS_ASSOC 为子迭代增加键值.使用attachIterator，可以为每一个设置键值
+ *
+ */
+$person_id = new ArrayIterator(array('001', '002', '003'));
+$person_name = new ArrayIterator(array('name1', 'name2', 'name3'));
+$person_age = new ArrayIterator(array(22, 23, 11));
+$persons = new MultipleIterator(MultipleIterator::MIT_KEYS_ASSOC);
+
+$persons->attachIterator($person_id, "ID");
+$persons->attachIterator($person_name, "NAME");
+$persons->attachIterator($person_age, "AGE");
+
+foreach ($persons AS $person) {
+    var_dump($person);
+}
+
+echo '--------------------------------- MultipleIterator  END-----------------------------------', '<br />';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
